@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Denser Falling Stars Photo Carousel</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #000;
+            overflow: hidden;
+            font-family: sans-serif;
+            position: relative;
+        }
+
+        /* Falling Stars Effect */
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            animation: animateStars 50s linear infinite; /* Animation speed set */
+        }
+        
+        /* Box-shadows for more stars */
+        .stars::before,
+        .stars::after {
+            content: '';
+            position: absolute;
+            background: transparent;
+            border-radius: 50%;
+            /* BADI LIST OF STARS */
+            box-shadow: 
+                /* Layer 1 - More dense, smaller stars */
+                0 0 1px 1px rgba(255, 255, 255, 0.7), 
+                20px 80px 1px 1px rgba(255, 255, 255, 0.8),
+                -30px 150px 0.5px 0.5px rgba(255, 255, 255, 0.6),
+                150px -50px 1.5px 1.5px rgba(255, 255, 255, 0.9),
+                250px 200px 1px 1px rgba(255, 255, 255, 0.7),
+                -100px 300px 2px 2px rgba(255, 255, 255, 0.5),
+                350px 40px 1px 1px rgba(255, 255, 255, 0.8),
+                500px 250px 0.5px 0.5px rgba(255, 255, 255, 0.6),
+                -200px 100px 1px 1px rgba(255, 255, 255, 0.9),
+                600px 180px 2px 2px rgba(255, 255, 255, 0.7),
+                750px 350px 1px 1px rgba(255, 255, 255, 0.8),
+                -50px 450px 0.5px 0.5px rgba(255, 255, 255, 0.6),
+                800px 10px 1.5px 1.5px rgba(255, 255, 255, 0.9),
+                950px 280px 1px 1px rgba(255, 255, 255, 0.7),
+                1100px 50px 2px 2px rgba(255, 255, 255, 0.5),
+                1250px 220px 1px 1px rgba(255, 255, 255, 0.8),
+                -150px 550px 0.5px 0.5px rgba(255, 255, 255, 0.6),
+                1400px 380px 1px 1px rgba(255, 255, 255, 0.9),
+                1550px 120px 2px 2px rgba(255, 255, 255, 0.7),
+                1700px 450px 1px 1px rgba(255, 255, 255, 0.8),
+                -250px 650px 0.5px 0.5px rgba(255, 255, 255, 0.6),
+                1850px 200px 1.5px 1.5px rgba(255, 255, 255, 0.9),
+                2000px 500px 1px 1px rgba(255, 255, 255, 0.7);
+        }
+
+        .stars::after {
+            top: -200px; /* Offset to create more stars */
+            left: -200px;
+            /* Layer 2 - More dense, slightly different offset */
+            box-shadow: 
+                -10px -10px 1px 1px rgba(255, 255, 255, 0.7),
+                -80px -200px 2px 2px rgba(255, 255, 255, 0.6),
+                -180px -50px 1px 1px rgba(255, 255, 255, 0.8),
+                -280px -350px 2px 2px rgba(255, 255, 255, 0.5),
+                -380px -150px 1px 1px rgba(255, 255, 255, 0.9),
+                -480px -400px 2px 2px rgba(255, 255, 255, 0.7),
+                -580px -250px 1px 1px rgba(255, 255, 255, 0.6),
+                -680px -450px 2px 2px rgba(255, 255, 255, 0.8),
+                -780px -100px 1px 1px rgba(255, 255, 255, 0.5),
+                -880px -300px 2px 2px rgba(255, 255, 255, 0.9),
+                -980px -20px 1px 1px rgba(255, 255, 255, 0.7),
+                -1080px -280px 2px 2px rgba(255, 255, 255, 0.6),
+                -1180px -120px 1px 1px rgba(255, 255, 255, 0.8),
+                -1280px -380px 2px 2px rgba(255, 255, 255, 0.5),
+                -1380px -220px 1px 1px rgba(255, 255, 255, 0.9),
+                -1480px -480px 2px 2px rgba(255, 255, 255, 0.7),
+                -1580px -320px 1px 1px rgba(255, 255, 255, 0.6),
+                -1680px -520px 2px 2px rgba(255, 255, 255, 0.8),
+                -1780px -170px 1px 1px rgba(255, 255, 255, 0.5),
+                -1880px -420px 2px 2px rgba(255, 255, 255, 0.9);
+        }
+
+        @keyframes animateStars {
+            from { transform: translateY(-100vh); }
+            to { transform: translateY(100vh); }
+        }
+
+        .carousel-container {
+            perspective: 1000px;
+            width: 300px;
+            height: 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            position: relative;
+        }
+
+        .carousel {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transform: rotateX(-25deg);
+            transition: transform 0.5s ease-out;
+            cursor: grab;
+        }
+        
+        .carousel.is-dragging {
+            cursor: grabbing;
+            transition: none;
+        }
+
+        .carousel-item {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 180px;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 5px;
+            border: 5px solid white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            transform: translate(-50%, -50%) rotateY(0deg); 
+        }
+
+        .carousel-item:nth-child(1) { transform: translate(-50%, -50%) rotateY(0deg) translateZ(250px); }
+        .carousel-item:nth-child(2) { transform: translate(-50%, -50%) rotateY(72deg) translateZ(250px); }
+        .carousel-item:nth-child(3) { transform: translate(-50%, -50%) rotateY(144deg) translateZ(250px); }
+        .carousel-item:nth-child(4) { transform: translate(-50%, -50%) rotateY(216deg) translateZ(250px); }
+        .carousel-item:nth-child(5) { transform: translate(-50%, -50%) rotateY(288deg) translateZ(250px); }
+        
+    </style>
+</head>
+<body>
+    <div class="stars"></div>
+    <div class="carousel-container">
+        <div class="carousel">
+            <img src="photos/photo1.jpg" alt="Photo 1" class="carousel-item">
+            <img src="photos/photo2.jpg" alt="Photo 2" class="carousel-item">
+            <img src="photos/photo3.jpg" alt="Photo 3" class="carousel-item">
+            <img src="photos/photo4.jpg" alt="Photo 4" class="carousel-item">
+            <img src="photos/photo5.jpg" alt="Photo 5" class="carousel-item">
+        
+        </div>
+    </div>
+
+    <script>
+        const carousel = document.querySelector('.carousel');
+        let isDragging = false;
+        let startX;
+        let rotationY = 0;
+        
+        // Touch events for mobile
+        carousel.addEventListener('touchstart', (e) => {
+            isDragging = true;
+            startX = e.touches[0].clientX;
+            e.preventDefault();
+            carousel.classList.add('is-dragging');
+        });
+
+        document.addEventListener('touchend', () => {
+            isDragging = false;
+            carousel.classList.remove('is-dragging');
+        });
+
+        document.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            const dx = e.touches[0].clientX - startX;
+            rotationY += dx * 0.5;
+            carousel.style.transform = `rotateX(-25deg) rotateY(${rotationY}deg)`;
+            startX = e.touches[0].clientX;
+        });
+        
+        // Mouse events
+        carousel.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            startX = e.clientX;
+            carousel.classList.add('is-dragging');
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+            carousel.classList.remove('is-dragging');
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            const dx = e.clientX - startX;
+            rotationY += dx * 0.5;
+            carousel.style.transform = `rotateX(-25deg) rotateY(${rotationY}deg)`;
+            startX = e.clientX;
+        });
+    </script>
+</body>
+</html>
